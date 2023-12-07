@@ -1,0 +1,12 @@
+spring:
+  # Database configuration
+  datasource:
+    url: jdbc:sqlite:books.db
+    driver-class-name: org.sqlite.JDBC
+  jpa:
+    # show-sql: true
+    database-platform: org.hibernate.community.dialect.SQLiteDialect
+  # Misc
+  output:
+    ansi:
+      enabled: ALWAYS
