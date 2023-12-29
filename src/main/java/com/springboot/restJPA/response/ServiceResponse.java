@@ -1,4 +1,4 @@
-package com.springboot.rest.response;
+package com.springboot.restJPA.response;
 
 public class ServiceResponse<Type> {
     protected int code;

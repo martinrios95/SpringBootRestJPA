@@ -1,4 +1,4 @@
-package com.springboot.rest.response;
+package com.springboot.restJPA.response;
 
 import java.util.List;
 
