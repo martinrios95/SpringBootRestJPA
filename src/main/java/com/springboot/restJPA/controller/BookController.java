@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Optional;
 
 @RestController
+@RequestMapping("/books")
 public class BookController {
     @Autowired
     private final BookRepository repository;
@@ -19,13 +20,13 @@ public class BookController {
         this.repository = repository;
     }
 
-    @GetMapping("/books")
+    @GetMapping()
     public ResponseEntity<Iterable<Book>> getAll(){
         return ResponseEntity.ok(repository.findAll());
     }
 
-    @GetMapping("/books/{id}")
-    public ResponseEntity<ServiceResponse<Book>> get(@PathVariable("id") String id){
+    @GetMapping("/{id}")
+    public ResponseEntity<?> get(@PathVariable("id") String id){
         Optional<Book> boxBook = repository.findById(id);
 
         ServiceResponse<Book> serviceResponse = new ServiceResponse<>();
@@ -37,17 +38,14 @@ public class BookController {
             return new ResponseEntity<>(serviceResponse, HttpStatus.NOT_FOUND);
         }
 
-        serviceResponse.setCode(HttpStatus.OK.value());
-        serviceResponse.setData(boxBook.get());
-
-        return new ResponseEntity<>(serviceResponse, HttpStatus.OK);
+        return ResponseEntity.ok(boxBook);
     }
 
-    @PostMapping("/books")
+    @PostMapping()
     public ResponseEntity<ServiceResponse> add(@RequestBody Book book){
         Book currentBook = repository.save(book);
 
-        ServiceResponse<Book> serviceResponse = new ServiceResponse<>();
+        ServiceResponse serviceResponse = new ServiceResponse<>();
 
         if (currentBook == null){
             serviceResponse.setCode(HttpStatus.BAD_REQUEST.value());
@@ -58,14 +56,14 @@ public class BookController {
 
         serviceResponse.setCode(HttpStatus.OK.value());
 
-        return new ResponseEntity<>(serviceResponse, HttpStatus.OK);
+        return ResponseEntity.ok(serviceResponse);
     }
 
-    @PutMapping("/books/{id}")
-    public ResponseEntity<ServiceResponse<Book>> update(@PathVariable("id") String id, @RequestBody Book book){
+    @PutMapping("/{id}")
+    public ResponseEntity<ServiceResponse> update(@PathVariable("id") String id, @RequestBody Book book){
         Optional<Book> boxBook = repository.findById(id);
 
-        ServiceResponse<Book> serviceResponse = new ServiceResponse<>();
+        ServiceResponse serviceResponse = new ServiceResponse<>();
 
         if (boxBook.isEmpty()){
             serviceResponse.setCode(HttpStatus.NOT_FOUND.value());
@@ -86,14 +84,14 @@ public class BookController {
 
         serviceResponse.setCode(HttpStatus.OK.value());
 
-        return new ResponseEntity<>(serviceResponse, HttpStatus.OK);
+        return ResponseEntity.ok(serviceResponse);
     }
 
-    @DeleteMapping("/books/{id}")
-    public ResponseEntity<ServiceResponse<Book>> delete(@PathVariable String id){
+    @DeleteMapping("/{id}")
+    public ResponseEntity<ServiceResponse> delete(@PathVariable String id){
         Optional<Book> boxBook = repository.findById(id);
 
-        ServiceResponse<Book> serviceResponse = new ServiceResponse<>();
+        ServiceResponse serviceResponse = new ServiceResponse<>();
 
         if (boxBook.isEmpty()){
             serviceResponse.setCode(HttpStatus.NOT_FOUND.value());
@@ -106,6 +104,6 @@ public class BookController {
 
         serviceResponse.setCode(HttpStatus.OK.value());
 
-        return new ResponseEntity<>(serviceResponse, HttpStatus.OK);
+        return ResponseEntity.ok(serviceResponse);
     }
 }
